@@ -1,0 +1,133 @@
+/* Midnight Neon — Xbox One overlay for Gamepad Viewer
+   Matte midnight black base + neon green racer streaks.
+   Neon color: rgb(12,232,24)
+   Works as an overlay on the built-in Xbox One skin (no custom sprites needed).
+*/
+
+/* ===== Theme tokens ===== */
+:root{
+  --neon: rgb(12,232,24);
+  --neon-soft: rgba(12,232,24,0.22);
+  --neon-med:  rgba(12,232,24,0.42);
+  --neon-strong: rgba(12,232,24,0.85);
+  --matte: #0a0a0d;   /* midnight black */
+  --matte-2: #0d0f12; /* subtle shift */
+}
+
+/* Keep canvas transparent for clean compositing in OBS */
+html, body { background: transparent !important; }
+
+/* ===== Scope: apply to “custom” and xbox-one controllers ===== */
+.controller.custom,
+.controller.xbox.one,
+.controller[class*="xbox"].one,
+.controller.xboxone {
+  position: relative;
+  isolation: isolate; /* contain blend layers */
+  filter: saturate(0.8) brightness(0.9) contrast(1.06);
+}
+
+/* Matte paint overlay (multiply) to give a midnight-black shell */
+.controller.custom::after,
+.controller.xbox.one::after,
+.controller[class*="xbox"].one::after,
+.controller.xboxone::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 140% at 50% 35%, #0000 42%, rgba(0,0,0,0.25) 72%, rgba(0,0,0,0.62) 100%),
+    linear-gradient(180deg, var(--matte), var(--matte-2));
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Animated neon racer streaks (screen blend) */
+@keyframes neonSweep {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 700px 0, -900px 0; }
+}
+.controller.custom::before,
+.controller.xbox.one::before,
+.controller[class*="xbox"].one::before,
+.controller.xboxone::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(-18deg,
+      transparent 0 22px,
+      var(--neon-soft) 22px 26px,
+      transparent 26px 75px
+    ),
+    repeating-linear-gradient(162deg,
+      transparent 0 30px,
+      rgba(12,232,24,0.16) 30px 34px,
+      transparent 34px 92px
+    );
+  opacity: 0.48;
+  filter: blur(0.6px) saturate(1.15);
+  mix-blend-mode: screen;
+  animation: neonSweep 6s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ===== Inputs: glow + feedback (keeps stock shapes) ===== */
+.controller .button,
+.controller .stick,
+.controller .trigger,
+.controller .bumper,
+.controller .dpad,
+.controller .menu, .controller .view {
+  transition: filter 120ms ease, box-shadow 120ms ease, transform 90ms ease;
+}
+
+/* Subtle idle sheen */
+.controller .button,
+.controller .stick {
+  filter: drop-shadow(0 0 0.4px rgba(255,255,255,0.06));
+}
+
+/* Press feedback: neon pop */
+.controller .pressed,
+.controller .active,
+.controller .highlight {
+  box-shadow:
+    0 0 6px var(--neon-med),
+    0 0 16px var(--neon-strong),
+    inset 0 0 10px rgba(12,232,24,0.35);
+  transform: translateZ(0) scale(0.985);
+}
+
+/* Face buttons — idle halo + brighter on press */
+.controller .abxy .button,
+.controller .a, .controller .b, .controller .x, .controller .y {
+  box-shadow: 0 0 6px rgba(12,232,24,0.18);
+}
+
+/* Triggers/Bumpers show a “charge sweep” when pressed */
+.controller .trigger.pressed, .controller .bumper.pressed {
+  background-image: linear-gradient(90deg, rgba(12,232,24,0.0), rgba(12,232,24,0.38));
+  background-size: 220% 100%;
+  background-position: 100% 0;
+}
+
+/* Stick click — neon ring */
+.controller .stick.pressed {
+  outline: 2px solid var(--neon);
+  outline-offset: 2px;
+}
+
+/* D-pad press — tidy rim */
+.controller .dpad .pressed {
+  box-shadow: 0 0 10px var(--neon-strong), inset 0 0 8px rgba(12,232,24,0.35);
+}
+
+/* Optional HUD labels (if visible) */
+.controller .label {
+  color: var(--neon) !important;
+  text-shadow: 0 0 6px var(--neon-med);
+}
+
+/* Sharper sprites in OBS Browser Source */
+img { image-rendering: -webkit-optimize-contrast; }
