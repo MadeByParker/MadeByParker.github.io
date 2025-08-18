@@ -1,0 +1,340 @@
+/* Midnight Neon — Xbox One custom PNG skin for Gamepad Viewer
+   Matte midnight black body + neon-green racer streaks (rgb(12,232,24))
+   Structure mirrors classic GPV xbox sprite mapping.
+   Make sure all URLs point to RAW PNGs!
+*/
+
+/* ===== Theme tokens ===== */
+:root {
+	--neon: rgb(12, 232, 24);
+	--neon-soft: rgba(12, 232, 24, 0.22);
+	--neon-med: rgba(12, 232, 24, 0.42);
+	--neon-strong: rgba(12, 232, 24, 0.85);
+	--matte: #0a0a0d; /* midnight black */
+	--matte-2: #0d0f12; /* subtle shift */
+}
+
+html,
+body {
+	background: transparent !important;
+}
+
+/* ===== Base controller ===== */
+.controller.custom {
+	/* Your base PNG: no sticks/buttons/dpad drawn on it */
+	background: url(base.png);
+	width: 807px; /* adjust if your base differs */
+	height: 651px; /* adjust if your base differs */
+	position: relative;
+	isolation: isolate;
+}
+
+/* Optional disconnected state */
+.custom.disconnected {
+	background: url(base.png);
+	filter: grayscale(1) brightness(0.6);
+}
+.custom.disconnected div {
+	display: none;
+}
+
+/* Matte & neon overlays on top of the base image (no extra assets) */
+@keyframes neonSweep {
+	from {
+		background-position: 0 0, 0 0;
+	}
+	to {
+		background-position: 700px 0, -900px 0;
+	}
+}
+
+.controller.custom::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(
+			120% 140% at 50% 35%,
+			#0000 42%,
+			rgba(0, 0, 0, 0.25) 72%,
+			rgba(0, 0, 0, 0.62) 100%
+		),
+		linear-gradient(180deg, var(--matte), var(--matte-2));
+	mix-blend-mode: multiply;
+	pointer-events: none;
+	z-index: 1;
+}
+.controller.custom::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: repeating-linear-gradient(
+			-18deg,
+			transparent 0 22px,
+			var(--neon-soft) 22px 26px,
+			transparent 26px 75px
+		),
+		repeating-linear-gradient(
+			162deg,
+			transparent 0 30px,
+			rgba(12, 232, 24, 0.16) 30px 34px,
+			transparent 34px 92px
+		);
+	opacity: 0.48;
+	filter: blur(0.6px) saturate(1.15);
+	mix-blend-mode: screen;
+	animation: neonSweep 6s linear infinite;
+	pointer-events: none;
+	z-index: 2;
+}
+
+/* ===== Triggers ===== */
+.custom .triggers {
+	width: 536px;
+	height: 121px;
+	position: absolute;
+	left: 152px; /* aligns with base.png */
+	top: 129px;
+}
+.custom .trigger {
+	width: 88px;
+	height: 121px;
+	background: url(trigger.png);
+	opacity: 0; /* show press via opacity */
+}
+.custom .trigger.left {
+	float: left;
+	background-position: 0 0;
+}
+.custom .trigger.right {
+	float: right;
+	transform: rotateY(180deg);
+}
+.custom .trigger.pressed {
+	opacity: 1;
+}
+
+/* ===== Bumpers ===== */
+.custom .bumpers {
+	position: absolute;
+	width: 536px;
+	height: 61px;
+	left: 107px;
+	top: 129px;
+}
+.custom .bumper {
+	width: 170px;
+	height: 61px;
+	background: url(bumper.png);
+	opacity: 0;
+}
+.custom .bumper.left {
+	float: left;
+}
+.custom .bumper.right {
+	float: right;
+	transform: rotateY(180deg);
+}
+.custom .bumper.pressed {
+	opacity: 1;
+}
+
+/* ===== Player quadrant ===== */
+.custom .quadrant {
+	position: absolute;
+	background: url(quadrant.png);
+	height: 45px;
+	width: 45px;
+	top: 258px;
+	left: 381px;
+}
+.custom .p0 {
+	background-position: 0 0;
+}
+.custom .p1 {
+	background-position: -45px 0;
+}
+.custom .p2 {
+	background-position: -90px 0;
+}
+.custom .p3 {
+	background-position: -135px 0;
+}
+
+/* ===== Back / Start (aka view/menu) ===== */
+.custom .arrows {
+	position: absolute;
+	width: 120px;
+	height: 33px;
+	top: 240px;
+	left: 344px;
+}
+.custom .back,
+.custom .start {
+	width: 33px;
+	height: 33px;
+	background: url(start-select.png);
+	opacity: 0; /* show press via opacity */
+}
+.custom .back {
+	float: left;
+	background-position: 0 0;
+}
+.custom .start {
+	float: right;
+	background-position: -33px 0;
+}
+.custom .back.pressed,
+.custom .start.pressed {
+	opacity: 1;
+}
+
+/* ===== Face buttons (ABXY) ===== */
+.custom .abxy {
+	position: absolute;
+	width: 153px;
+	height: 156px;
+	top: 192px;
+	left: 488px;
+}
+.custom .button {
+	position: absolute;
+	background: url(abxy.png);
+	width: 48px;
+	height: 48px;
+}
+.custom .button.pressed {
+	background-position-y: -48px;
+	margin-top: 5px;
+	opacity: 1;
+}
+.custom .a {
+	background-position: 0 0;
+	top: 108px;
+	left: 55px;
+} /* col1 row1 */
+.custom .b {
+	background-position: -48px 0;
+	top: 58px;
+	right: 0px;
+} /* col2 row1 */
+.custom .x {
+	background-position: -96px 0;
+	top: 58px;
+	left: 4px;
+} /* col3 row1 */
+.custom .y {
+	background-position: 48px 0;
+	left: 55px;
+	top: 7px;
+} /* col4 row1 (uses +48 to align Y as in classic css) */
+
+/* ===== Sticks ===== */
+.custom .sticks {
+	position: absolute;
+	width: 371px;
+	height: 196px;
+	top: 239px;
+	left: 144px;
+}
+.custom .stick {
+	position: absolute;
+	background: url(stick.png);
+	height: 83px;
+	width: 83px;
+	background-position: -85px 0; /* idle = right column */
+}
+.custom .stick.pressed {
+	background-position: 0 0;
+} /* pressed = left column */
+.custom .stick.left {
+	top: 0;
+	left: 0;
+}
+.custom .stick.right {
+	top: 113px;
+	left: 288px;
+}
+
+/* ===== D-Pad ===== */
+.custom .dpad {
+	position: absolute;
+	width: 140px;
+	height: 132px;
+	top: 307px;
+	left: 92px;
+}
+.custom .face {
+	background: url(dpad.png);
+	position: absolute;
+}
+.custom .face.up,
+.custom .face.down {
+	width: 38px;
+	height: 52px;
+}
+.custom .face.left,
+.custom .face.right {
+	width: 52px;
+	height: 38px;
+}
+
+.custom .face.up {
+	left: 51px;
+	top: 0;
+	background-position: 92px 0;
+}
+.custom .face.down {
+	left: 51px;
+	top: 80px;
+	background-position: 131px 0;
+}
+.custom .face.left {
+	top: 47px;
+	left: 0;
+	background-position: 0px 0;
+}
+.custom .face.right {
+	top: 47px;
+	right: 0;
+	background-position: 53px 0;
+}
+.custom .face.pressed {
+	margin-top: 5px;
+	background-position-y: -52px;
+}
+
+/* ===== Neon press effects (glow) ===== */
+.custom .button,
+.custom .stick,
+.custom .trigger,
+.custom .bumper,
+.custom .face,
+.custom .back,
+.custom .start {
+	transition: filter 120ms ease, box-shadow 120ms ease, transform 90ms ease,
+		opacity 90ms ease;
+}
+
+.custom .button,
+.custom .stick {
+	filter: drop-shadow(0 0 0.4px rgba(255, 255, 255, 0.06));
+}
+
+.custom .pressed,
+.custom .active,
+.custom .highlight {
+	box-shadow: 0 0 6px var(--neon-med), 0 0 16px var(--neon-strong),
+		inset 0 0 10px rgba(12, 232, 24, 0.35);
+	transform: translateZ(0) scale(0.985);
+}
+
+/* Labels (if visible) */
+.custom .label {
+	color: var(--neon) !important;
+	text-shadow: 0 0 6px var(--neon-med);
+}
+
+/* Sharper sprites */
+img {
+	image-rendering: -webkit-optimize-contrast;
+}
